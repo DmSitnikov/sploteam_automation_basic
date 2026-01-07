@@ -41,11 +41,29 @@ public WebElement getSignInModalCloseButton() {
      return signInModalCloseButton;
     }
 
+    public WebElement getLoginEmailInput() {
+        WebElement loginEmailInput = driver.findElement(By.xpath(LOGIN_EMAIL_INPUT_FORM_XPATH));
+        return loginEmailInput;
+    }
+
+    public WebElement getLoginPasswordInput() {
+        WebElement loginPasswordInput = driver.findElement(By.name(LOGIN_PASSWORD_INPUT_FORM_NAME));
+        return loginPasswordInput;
+    }
+
+    public WebElement getLoginButton() {
+        WebElement loginButton = driver.findElement(By.xpath(LOGIN_BUTTON_FORM_XPATH));
+        return loginButton;
+    }
+
 //LOCATORS
-public static final String SIGNIN_BUTTON_CLASS = "header__signIn";
-public static final String SIGNIN_RESTORE_OPTION_CLASS = "signIn__restore-pass";
-public static final String SIGNIN_EMAIL_INPUT_XPATH = "/html/body/div[3]/div/div/div/form/div[2]/input";
-public static final String SIGNIN_SEND_EMAIL_BUTTON_XPATH = "/html/body/div[3]/div/div/div/form/button";
-public static final String SIGNIN_SUBMIT_TEXT_XPATH = "/html/body/div[3]/div/div/p";
-public static final String SIGNIN_MODAL_CLOSE_PANEL_CLASS = "modal__close";
+    public static final String SIGNIN_BUTTON_CLASS = "header__signIn";
+    public static final String SIGNIN_RESTORE_OPTION_CLASS = "signIn__restore-pass";
+    public static final String SIGNIN_EMAIL_INPUT_XPATH = "/html/body/div[3]/div/div/div/form/div[2]/input";
+    public static final String SIGNIN_SEND_EMAIL_BUTTON_XPATH = "/html/body/div[3]/div/div/div/form/button";
+    public static final String SIGNIN_SUBMIT_TEXT_XPATH = "/html/body/div[3]/div/div/p";
+    public static final String SIGNIN_MODAL_CLOSE_PANEL_CLASS = "modal__close";
+    public static final String LOGIN_EMAIL_INPUT_FORM_XPATH = "/html/body/div[3]/div/div/div/div[2]/form/div[1]/input";
+    public static final String LOGIN_PASSWORD_INPUT_FORM_NAME = "password";
+    public static final String LOGIN_BUTTON_FORM_XPATH = "/html/body/div[3]/div/div/div/div[2]/form/button";
 }

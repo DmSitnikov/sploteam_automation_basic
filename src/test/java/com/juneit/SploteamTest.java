@@ -27,6 +27,8 @@ public class SploteamTest {
     private EventsCalendarPage eventsCalendarPage = new EventsCalendarPage(driver);
     private CampPage campPage = new CampPage(driver);
     private LoginPage loginPage = new LoginPage(driver);
+    private ErrorTextPage errorTextPage = new ErrorTextPage(driver);
+    private ProfilePage profilePage = new ProfilePage(driver);
 
     @Before
     public void setup () {
@@ -45,56 +47,38 @@ public class SploteamTest {
 
     @Test
     public void assertMainPageIsLoaded() {
-        WebElement signinButton = driver.findElement(By.className(SIGNIN_BUTTON_CLASS));
-        Assert.assertTrue(signinButton.isDisplayed());
-        WebElement gamesList = driver.findElement(By.className(COMING_GAMES_TEXT_CLASS));
-        Assert.assertTrue(gamesList.isDisplayed());
-        Assert.assertTrue(driver.findElement(By.className(volleyball_BUTTON_CLASS)).isDisplayed());
-        Assert.assertTrue(driver.findElement(By.className(HEADER_LOGO_CLASS)).isDisplayed());
-        Assert.assertTrue(driver.findElement(By.className(MORE_GAMES_BUTTON_CLASS)).isDisplayed());
-        Assert.assertTrue(driver.findElement(By.xpath(SHOW_MORE_GAMES_XPATH)).isDisplayed());
-        Assert.assertTrue(driver.findElement(By.xpath(CREATE_YOUR_GAME_XPATH)).isDisplayed());
-        String allGamesTitle = driver.findElement(By.className(ALL_GAMES_TITLE_CLASS)).getText();
+        mainPage.getSignInButton().isDisplayed();
+        mainPage.getComingGamesTitle().isDisplayed();
+        mainPage.getVolleyballButton().isDisplayed();
+        mainPage.getHeaderLogo().isDisplayed();
+        mainPage.getMoreGamesButton().isDisplayed();
+        mainPage.getCreateYourGameButton().isDisplayed();
+        String allGamesTitle = mainPage.getAllGamesTitle().getText();
         assertEquals("Играй, тренируйся\n" +
                 "и улучшай свои навыки\n" +
                 "в командных видах спорта", allGamesTitle);
-
-        //Home Work 1
-        Assert.assertTrue(driver.findElement(By.className(FOOTER_LOGO_XPATH)).isDisplayed());//попробовать через контейнер
-        Assert.assertTrue(driver.findElement(By.xpath(RENT_FIELD_XPATH)).isDisplayed());
-        String SelecetCity = driver.findElement(By.className(SELECT_CITY_CLASS)).getText();
-        assertEquals("Санкт-Петербург", SelecetCity);
-
-        WebElement footballButton = driver.findElement(By.className(FOOTBALL_BUTTON_CLASS));
-        Assert.assertTrue(footballButton.isDisplayed());
-        String footballText = footballButton.getText();
-        assertEquals("Футбол", footballText);
-
-        String cooperatinText = driver.findElement(By.className(COOPERATION_TITLE_CLASS)).getText();
-        assertEquals("Приглашаем к сотрудничеству\n" +
-                "владельцев площадок и тренеров",cooperatinText);
     }
 
     @Test
     public void assertCampSection () {
-        Assert.assertTrue(driver.findElement(By.className(CAMP_BUTTON_CLASS)).isDisplayed());
-        String newThing = driver.findElement(By.className(NEWTHING_TEXT_CLASS)).getText();
+        mainPage.getCampsButton().isDisplayed();
+        String newThing = mainPage.getNewThingText().getText();
         assertEquals("Новинка!", newThing);
-        String sportCamp = driver.findElement(By.className(SPORTCAMP_TEXT_CLASS)).getText();
+        String sportCamp = mainPage.getSportCampsText().getText();
         assertEquals("Спортивные кемпы", sportCamp);
-        Assert.assertTrue(driver.findElement(By.className(SPORTCAMP_LOGO_CLASS)).isDisplayed());
+        mainPage.getSportCampsLogo().isDisplayed();
     }
 
     @Test
     public void assertSendRequestSection () {
-        Assert.assertTrue(driver.findElement(By.xpath(USER_NAME_XPATH)).isDisplayed());
-        Assert.assertTrue(driver.findElement(By.name(EMAIL_PHONE_NAME)).isDisplayed());
-        String userNameField = driver.findElement(By.xpath(USER_NAME_TEXT_XPATH)).getText();
+        mainPage.getSendRequestUserNameInput().isDisplayed();
+        mainPage.getSendRequestEmailOrPhoneInput().isDisplayed();
+        String userNameField = mainPage.getSendRequestUserNameText().getText();
         assertEquals("Ваше имя", userNameField);
-        String emailPhone = driver.findElement(By.xpath(EMAIL_PHONE_TEXT_XPATH)).getText();
+        String emailPhone = mainPage.getSendRequestEmailOrPhoneText().getText();
         assertEquals("E-mail или телефон", emailPhone);
-        Assert.assertTrue(driver.findElement(By.className(SEND_REQUEST_BUTTON_CLASS)).isDisplayed());
-        String cooperationText = driver.findElement(By.className(COOPERATION_TEXT_CLASS)).getText();
+        mainPage.getSendRequestButton().isDisplayed();
+        String cooperationText = mainPage.getCooperationText().getText();
         assertEquals("Присоединяйтесь к самой крупной сети игроков, готовых придти к вам уже сегодня!", cooperationText);
     }
 
@@ -109,65 +93,60 @@ public class SploteamTest {
         // LESSON 2
     @Test
     public void assertLoginPositive() {
-        login("sytsytnikov@gmail.com", "Password1");
-        driver.findElement(By.className(USER_NAME_HEADER_CLASS)).click();
-        driver.findElement(By.className(LOGOUT_BUTTON_CLASS));
-        Assert.assertTrue(driver.findElement(By.className(SIGNIN_BUTTON_CLASS)).isDisplayed());
+        login("sytsytnikov@gmail.com", "Password2");
+        mainPage.getLoggedInUserHeader().click();
+        profilePage.getLogoutButton().click();
+        mainPage.getSignInButton().isDisplayed();
     }
 
     @Test //Negative test
     public void assertLoginPasswordShortError() {
         login("sytsytnikov@gmail.com", "Pas");
-        driver.findElement(By.xpath(LOGIN_BUTTON_FORM_XPATH)).isDisplayed();
-        Assert.assertTrue(driver.findElement(By.className(COMMON_TEXT_ELEMENT_ERROR_CLASS)).isDisplayed());
-        assertEquals("Неверное значение", driver.findElement(By.className(COMMON_TEXT_ELEMENT_ERROR_CLASS)).getText());
+        errorTextPage.getErrorText().isDisplayed();
+        assertEquals("Неверное значение", errorTextPage.getErrorText().getText());
     }
 
     @Test //Negative test
     public void assertLoginEmailSpellingError() {
         login("sysytnikov@gmail.com", "Password1");
-        driver.findElement(By.xpath(LOGIN_BUTTON_FORM_XPATH)).isDisplayed();
-        Assert.assertTrue(driver.findElement(By.className(COMMON_TEXT_ELEMENT_ERROR_CLASS)).isDisplayed());
-        assertEquals("Такой логин или пароль не найдены", driver.findElement(By.className(COMMON_TEXT_ELEMENT_ERROR_CLASS)).getText());
+        errorTextPage.getErrorText().isDisplayed();
+        assertEquals("Такой логин или пароль не найдены", errorTextPage.getErrorText().getText());
     }
 
     //HOME WORK 2
     @Test //Negative test
     public void assertLoginEmailEmptyFieldError() {
         login("", "Password2");
-        driver.findElement(By.xpath(LOGIN_BUTTON_FORM_XPATH)).isDisplayed();
-        Assert.assertTrue(driver.findElement(By.xpath(LOGIN_EMAIL_INPUT_FORM_XPATH)).isDisplayed());
-        assertEquals("", driver.findElement(By.xpath(LOGIN_EMAIL_INPUT_FORM_XPATH)).getText());
-        driver.findElement(By.xpath(LOGIN_BUTTON_FORM_XPATH)).click();
-        assertEquals(driver.switchTo().activeElement(), driver.findElement(By.xpath(LOGIN_EMAIL_INPUT_FORM_XPATH))); // проверяем фокус на активном элементе
+        loginPage.getLoginEmailInput().isDisplayed();
+        assertEquals("", loginPage.getLoginEmailInput().getText());
+        loginPage.getLoginButton().click();
+        assertEquals(driver.switchTo().activeElement(), loginPage.getLoginEmailInput()); // проверяем фокус на активном элементе
     }
 
     @Test //Negative test
     public void assertLoginEmailNoDotError() {
         login("sytsytnikov@gmailcom", "Password2");
-        driver.findElement(By.xpath(LOGIN_BUTTON_FORM_XPATH)).isDisplayed();
-        Assert.assertTrue(driver.findElement(By.className(COMMON_TEXT_ELEMENT_ERROR_CLASS)).isDisplayed());
-        assertEquals("Неверное значение", driver.findElement(By.className(COMMON_TEXT_ELEMENT_ERROR_CLASS)).getText());
+        errorTextPage.getErrorText().isDisplayed();
+        assertEquals("Неверное значение", errorTextPage.getErrorText().getText());
     }
 
     @Test //Negative test
     public void assertLoginLongPasswordError() {
         login("sytsytnikov@gmail.com", "Password1211");
-        driver.findElement(By.xpath(LOGIN_BUTTON_FORM_XPATH)).isDisplayed();
-        Assert.assertTrue(driver.findElement(By.className(COMMON_TEXT_ELEMENT_ERROR_CLASS)).isDisplayed());
-        assertEquals("Неверный пароль", driver.findElement(By.className(COMMON_TEXT_ELEMENT_ERROR_CLASS)).getText());
+        errorTextPage.getErrorText().isDisplayed();
+        assertEquals("Неверный пароль", errorTextPage.getErrorText().getText());
     }
 
     @Test
     public void assertProfilePagePositive() {
         login("sytsytnikov@gmail.com", "Password2");
-        driver.findElement(By.className(USER_NAME_HEADER_CLASS)).click();
-        Assert.assertTrue(driver.findElement(By.className(USER_NAME_PROFILE_CLASS)).isDisplayed());
-        Assert.assertTrue(driver.findElement(By.className(USER_EMAIL_PROFILE_CLASS)).isDisplayed());
-        Assert.assertTrue(driver.findElement(By.className(DEPOSIT_BUTTON_PROFILE_CLASS)).isDisplayed());
-        Assert.assertTrue(driver.findElement(By.className(EDIT_BUTTON_PROFILE_CLASS)).isDisplayed());
-        String OwnDeposit = driver.findElement(By.xpath(OWN_DEPOSIT_TEXT_XPATH)).getText();
-        Assert.assertTrue(OwnDeposit.contains("Личный счёт")); //роверяем что нужная нам часть текста находится в этом элементе
+        mainPage.getLoggedInUserHeader().click();
+        profilePage.getProfileUserName().isDisplayed();
+        profilePage.getProfileUserEmail().isDisplayed();
+        profilePage.getDepositButton().isDisplayed();
+        profilePage.getEditButton().isDisplayed();
+        String OwnDeposit = profilePage.getOwnDepositText().getText();
+        Assert.assertTrue(OwnDeposit.contains("Личный счёт")); //проверяем что нужная нам часть текста находится в этом элементе
         logout();
     }
 
@@ -685,19 +664,19 @@ public class SploteamTest {
     }
 
     private void login(String email, String password) {
-        driver.findElement(By.className(SIGNIN_BUTTON_CLASS)).click();
-        driver.findElement(By.xpath(LOGIN_EMAIL_INPUT_FORM_XPATH)).sendKeys(email);
-        driver.findElement(By.name(LOGIN_PASSWORD_INPUT_FORM_NAME)).sendKeys(password);
-        driver.findElement(By.xpath(LOGIN_BUTTON_FORM_XPATH)).click();
+        mainPage.getSignInButton().click();
+        loginPage.getLoginEmailInput().sendKeys(email);
+        loginPage.getLoginPasswordInput().sendKeys(password);
+        loginPage.getLoginButton().click();
     }
     private void logout() {
-        driver.findElement(By.className(USER_NAME_HEADER_CLASS)).click();
-        driver.findElement(By.className(LOGOUT_BUTTON_CLASS)).click();
+        mainPage.getLoggedInUserHeader().click();
+        profilePage.getLogoutButton().click();
     }
 
     private void goToEditProfile() {
-        driver.findElement(By.className(USER_NAME_HEADER_CLASS)).click();
-        driver.findElement(By.className(EDIT_BUTTON_PROFILE_CLASS)).click();
+        mainPage.getLoggedInUserHeader().click();
+        profilePage.getEditButton().click();
     }
 
     private void TopUpBalance(String enterTopUpAmount) throws InterruptedException { // улучшение
@@ -715,13 +694,8 @@ public class SploteamTest {
 
     //LOCATORS TEST1
     public static final String SIGNIN_BUTTON_CLASS = "header__signIn";
-    public static final String HEADER_LOGO_CLASS = "header__logo";
-    public static final String volleyball_BUTTON_CLASS = "games-list__item_volleyball";
-    public static final String COMING_GAMES_TEXT_CLASS = "coming-games__title";
+
     public static final String MORE_GAMES_BUTTON_CLASS = "games-list__item_more-games";
-    public static final String SHOW_MORE_GAMES_XPATH = "//*[@id=\"root\"]/div[2]/section[2]/div/div[3]/a";
-    public static final String CREATE_YOUR_GAME_XPATH = "//*[@id=\"root\"]/div[2]/section[3]/div/div[2]/a";
-    public static final String ALL_GAMES_TITLE_CLASS = "all-games__title";
 
     // TEST2 verifyCampSection
     public static final String FOOTER_LOGO_XPATH = "footer__logo";
@@ -735,19 +709,6 @@ public class SploteamTest {
     public static final String CAMP_CARD_CONTAINER_CLASS = "CampCard_container__1BHZa";
 
     public static final String MONTH_NO_CAMP_TEXT_CLASS = "CampsSearchPage_searchResults__Yio_Q";
-
-    public static final String NEWTHING_TEXT_CLASS = "CampsButton_new__1YwW-";
-    public static final String SPORTCAMP_TEXT_CLASS = "CampsButton_title__55qxk";
-    public static final String SPORTCAMP_LOGO_CLASS = "CampsButton_img__3CoXw";
-    public static final String PEPSI_TEXT_XPATH = "//*[@id=\"root\"]/div[2]/div[2]/div/div/div[1]/div[1]/div[4]/div/div/div[2]/div[2]";
-
-    // TEST3 - verifySendRequestSection
-    public static final String USER_NAME_XPATH = "//*[@id=\"root\"]/div[2]/section[5]/div/form/div[1]/input";
-    public static final String EMAIL_PHONE_NAME = "email_or_phone";
-    public static final String USER_NAME_TEXT_XPATH = "//*[@id=\"root\"]/div[2]/section[5]/div/form/div[1]/label";
-    public static final String EMAIL_PHONE_TEXT_XPATH = "//*[@id=\"root\"]/div[2]/section[5]/div/form/div[2]/label";
-    public static final String SEND_REQUEST_BUTTON_CLASS = "cooperation-form__submit";
-    public static final String COOPERATION_TEXT_CLASS = "cooperation__text";
 
     public static final String LOGIN_EMAIL_INPUT_FORM_XPATH = "/html/body/div[3]/div/div/div/div[2]/form/div[1]/input";
     public static final String LOGIN_PASSWORD_INPUT_FORM_NAME =  "password";
