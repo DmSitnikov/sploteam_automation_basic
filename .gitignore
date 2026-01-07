@@ -2,4 +2,6 @@
 .DS_Store
 **/config.properties
 **/.idea
-**/target
+**/target/
+*.class
+.idea/workspace.xml
