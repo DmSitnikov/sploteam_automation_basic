@@ -29,6 +29,7 @@ public class SploteamTest {
     private LoginPage loginPage = new LoginPage(driver);
     private ErrorTextPage errorTextPage = new ErrorTextPage(driver);
     private ProfilePage profilePage = new ProfilePage(driver);
+    private EditPage editPage = new EditPage(driver);
 
     @Before
     public void setup () {
@@ -154,26 +155,25 @@ public class SploteamTest {
     public void assertEditUserInfo() {
         login("sytsytnikov@gmail.com", "Password2");
         goToEditProfile();
-        String nameBefore = driver.findElement(By.xpath(USER_INFO_NAME_XPATH)).getAttribute("value");
+        String nameBefore = editPage.getEditNameInput().getAttribute("value");
         Assert.assertTrue(nameBefore.contains("Dmitriy Sitnikov"));
-        driver.findElement(By.xpath(DELETE_NAME_BUTTON_XPATH)).click(); //Удаляю имя которое было введено ранее
-        driver.findElement(By.xpath(USER_INFO_NAME_XPATH)).sendKeys("Vanja Ivanov");
-        assertEquals("Сохранить изменения", driver.findElement(By.xpath(SAVE_BUTTON_XPATH)).getText());
-        driver.findElement(By.xpath(SAVE_BUTTON_XPATH)).click();
-        Assert.assertTrue(driver.findElement(By.xpath(SAVE_SUCCESS_TEXT_XPATH)).isDisplayed());
-        assertEquals("Ваш профиль успешно обновлён", driver.findElement(By.xpath(SAVE_SUCCESS_TEXT_XPATH)).getText());
-        driver.findElement(By.className(CLOSE_SAVE_PANEL_CLASS)).click();
-        driver.findElement(By.className(USER_NAME_HEADER_CLASS)).click();
+        editPage.getDeleteNameButton().click(); //Удаляю имя которое было введено ранее
+        editPage.getEditNameInput().sendKeys("Vanja Ivanov");
+        assertEquals("Сохранить изменения", editPage.getEditSaveButton().getText());
+        editPage.getEditSaveButton().click();
+        assertEquals("Ваш профиль успешно обновлён", editPage.getEditSaveText().getText());
+        editPage.getCloseSavePanelButton().click();
+        mainPage.getLoggedInUserHeader().click();
         driver.navigate().refresh();
-        assertEquals("Vanja Ivanov", driver.findElement(By.className(USER_NAME_HEADER_CLASS)).getText());
+        assertEquals("Vanja Ivanov", mainPage.getLoggedInUserHeader().getText());
         goToEditProfile();
-        driver.findElement(By.xpath(DELETE_NAME_BUTTON_XPATH)).click();
-        driver.findElement(By.xpath(USER_INFO_NAME_XPATH)).sendKeys("Dmitriy Sitnikov");
-        driver.findElement(By.xpath(SAVE_BUTTON_XPATH)).click();
-        driver.findElement(By.className(CLOSE_SAVE_PANEL_CLASS)).click();
-        driver.findElement(By.className(USER_NAME_HEADER_CLASS)).click();
+        editPage.getDeleteNameButton().click();
+        editPage.getEditNameInput().sendKeys("Dmitriy Sitnikov");
+        editPage.getEditSaveButton().click();
+        editPage.getCloseSavePanelButton().click();
+        mainPage.getLoggedInUserHeader().click();
         driver.navigate().refresh();
-        assertEquals("Dmitriy Sitnikov", driver.findElement(By.className(USER_NAME_HEADER_CLASS)).getText());
+        assertEquals("Dmitriy Sitnikov", mainPage.getLoggedInUserHeader().getText());
         logout();
     }
 
