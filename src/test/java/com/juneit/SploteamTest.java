@@ -181,10 +181,10 @@ public class SploteamTest {
     public void assertEmptyNameField() {
         login("sytsytnikov@gmail.com", "Password2");
         goToEditProfile();
-        driver.findElement(By.xpath(DELETE_NAME_BUTTON_XPATH)).click(); //Удаляю имя которое было введено ранее
-        driver.findElement(By.xpath(SAVE_BUTTON_XPATH)).click();
-        Assert.assertTrue(driver.findElement(By.className(COMMON_TEXT_ELEMENT_ERROR_CLASS)).isDisplayed());
-        assertEquals("Выберите значение", driver.findElement(By.className(COMMON_TEXT_ELEMENT_ERROR_CLASS)).getText());
+        editPage.getDeleteNameButton().click(); //Удаляю имя которое было введено ранее
+        editPage.getEditSaveButton().click();
+        errorTextPage.getErrorText().isDisplayed();
+        assertEquals("Выберите значение", errorTextPage.getErrorText().getText());
     }
 
     @Test //TASK with Asterix
@@ -215,13 +215,13 @@ public class SploteamTest {
     @Test //Negative test
     public void assertNoAtEmail() {
         login("sytsytnikovgmail.com", "Password2");
-        String emailNoAtError = driver.findElement(By.xpath(LOGIN_EMAIL_INPUT_FORM_XPATH)).getAttribute("validationMessage");
+        String emailNoAtError = loginPage.getLoginEmailInput().getAttribute("validationMessage");
         assertEquals("Die E-Mail-Adresse muss ein @-Zeichen enthalten. In der Angabe \"sytsytnikovgmail.com\" fehlt ein @-Zeichen.", emailNoAtError);
     }
 
     @Test
     public void assertCreatedGames() {
-        driver.findElement(By.className(MORE_GAMES_BUTTON_CLASS)).click();
+        mainPage.getMoreGamesButton().click();
         driver.findElement(By.xpath(DATE_WITH_CREATED_GAMES_XPATH)).click();
         driver.navigate().refresh();
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.className(GAME_FILTER_CLASS), 4));
