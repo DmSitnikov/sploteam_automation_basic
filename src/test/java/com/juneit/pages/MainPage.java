@@ -11,8 +11,8 @@ public class MainPage {
 
     //METHODS
     public WebElement getMoreGamesButton() {
-        WebElement MoreGamesButton = driver.findElement(By.xpath(SHOW_MORE_GAMES_XPATH));
-        return MoreGamesButton;
+        WebElement moreGamesButton = driver.findElement(By.xpath(SHOW_MORE_GAMES_XPATH));
+        return moreGamesButton;
     }
 
     public WebElement getSignInButton() {

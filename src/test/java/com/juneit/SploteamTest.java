@@ -91,7 +91,6 @@ public class SploteamTest {
         System.out.println(externallinks.size());
     }
 
-        // LESSON 2
     @Test
     public void assertLoginPositive() {
         login("sytsytnikov@gmail.com", "Password2");
@@ -100,22 +99,21 @@ public class SploteamTest {
         mainPage.getSignInButton().isDisplayed();
     }
 
-    @Test //Negative test
+    @Test
     public void assertLoginPasswordShortError() {
         login("sytsytnikov@gmail.com", "Pas");
         errorTextPage.getErrorText().isDisplayed();
         assertEquals("Неверное значение", errorTextPage.getErrorText().getText());
     }
 
-    @Test //Negative test
+    @Test
     public void assertLoginEmailSpellingError() {
         login("sysytnikov@gmail.com", "Password1");
         errorTextPage.getErrorText().isDisplayed();
         assertEquals("Такой логин или пароль не найдены", errorTextPage.getErrorText().getText());
     }
 
-    //HOME WORK 2
-    @Test //Negative test
+    @Test
     public void assertLoginEmailEmptyFieldError() {
         login("", "Password2");
         loginPage.getLoginEmailInput().isDisplayed();
@@ -124,14 +122,14 @@ public class SploteamTest {
         assertEquals(driver.switchTo().activeElement(), loginPage.getLoginEmailInput()); // проверяем фокус на активном элементе
     }
 
-    @Test //Negative test
+    @Test
     public void assertLoginEmailNoDotError() {
         login("sytsytnikov@gmailcom", "Password2");
         errorTextPage.getErrorText().isDisplayed();
         assertEquals("Неверное значение", errorTextPage.getErrorText().getText());
     }
 
-    @Test //Negative test
+    @Test
     public void assertLoginLongPasswordError() {
         login("sytsytnikov@gmail.com", "Password1211");
         errorTextPage.getErrorText().isDisplayed();
@@ -177,7 +175,7 @@ public class SploteamTest {
         logout();
     }
 
-    @Test //Negative test
+    @Test
     public void assertEmptyNameField() {
         login("sytsytnikov@gmail.com", "Password2");
         goToEditProfile();
@@ -187,20 +185,7 @@ public class SploteamTest {
         assertEquals("Выберите значение", errorTextPage.getErrorText().getText());
     }
 
-    @Test //TASK with Asterix
-    public void assertTopUpBalanceSection() throws InterruptedException {
-        login("sytsytnikov@gmail.com", "Password2");
-        driver.findElement(By.className(USER_NAME_HEADER_CLASS)).click();
-        TopUpBalance("1");
-        //driver.findElement(By.className(CLOSE_NAVIGATE_TO_PROFILE_BUTTON_CLASS)).click(); // Иногда нужен чтобы закрыть всплывающее окно
-        String balanceTextAfter = ("Личный счет: 204.00 ₽"); //сумма после пополнения
-        String balanceAfter = balanceTextAfter.substring(13, balanceTextAfter.indexOf("₽") - 1);
-        Double depositAmountAfter = Double.parseDouble(balanceAfter);
-        System.out.println(depositAmountAfter + 100);
-        logout();
-    }
-
-    @Test //Negative test
+    @Test
     public void assertWrongAmountError() {
         login("sytsytnikov@gmail.com", "Password2");
         driver.findElement(By.className(USER_NAME_HEADER_CLASS)).click();
@@ -212,7 +197,7 @@ public class SploteamTest {
     }
 
 
-    @Test //Negative test
+    @Test
     public void assertNoAtEmail() {
         login("sytsytnikovgmail.com", "Password2");
         String emailNoAtError = loginPage.getLoginEmailInput().getAttribute("validationMessage");
@@ -234,7 +219,7 @@ public class SploteamTest {
 
     @Test
     public void assertPesokArenaFilter() {
-        driver.findElement(By.className(MORE_GAMES_BUTTON_CLASS)).click();
+        mainPage.getMoreGamesButton().click();
         driver.findElement(By.xpath(DATE_WITH_CREATED_GAMES_XPATH)).click();
         driver.navigate().refresh();
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.className(GAME_FILTER_CLASS), 4));
@@ -252,7 +237,7 @@ public class SploteamTest {
 
     @Test
     public void assertPlayerLightLevelFilter() {
-        driver.findElement(By.className(MORE_GAMES_BUTTON_CLASS)).click();
+        mainPage.getMoreGamesButton().click();
         driver.findElement(By.xpath(DATE_WITH_CREATED_GAMES_XPATH)).click();
         driver.navigate().refresh();
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.className(GAME_FILTER_CLASS), 4));
@@ -270,7 +255,7 @@ public class SploteamTest {
 
     @Test
     public void assertPlayerLevelSportArtFilter() {
-        driver.findElement(By.className(MORE_GAMES_BUTTON_CLASS)).click();
+        mainPage.getMoreGamesButton().click();
         driver.findElement(By.xpath(DATE_WITH_CREATED_GAMES_XPATH)).click();
         driver.navigate().refresh();
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.className(GAME_FILTER_CLASS), 4));
@@ -291,7 +276,7 @@ public class SploteamTest {
         System.out.println(driver.findElements(By.className(SPORT_ART_OPTION_ON_GAME_CLASS)).size());
     }
 
-    @Test //Negative test
+    @Test
     public void assertSurveySaveButtonError() {
         login("sytsytnikov@gmail.com", "Password2");
         driver.findElement(By.className(USER_NAME_HEADER_CLASS)).click();
@@ -339,8 +324,8 @@ public class SploteamTest {
             driver.findElement(By.xpath(OPEN_MALE_GENDER_XPATH)).click();
         }
 
-        driver.findElement(By.xpath(SAVE_BUTTON_XPATH)).click();
-        driver.findElement(By.className(CLOSE_SAVE_PANEL_CLASS)).click();
+        editPage.getEditSaveButton().click();
+        editPage.getCloseSavePanelButton().click();
         wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElementLocated(By.className(PROFILE_GENDER_VALUE_CLASS), selectedGender)));
 
         String updatedGender = driver.findElement(By.className(PROFILE_GENDER_VALUE_CLASS)).getText();
@@ -350,10 +335,10 @@ public class SploteamTest {
 
     @Test
     public void assertEvenNumberDates() {
-        driver.findElement(By.className(MORE_GAMES_BUTTON_CLASS)).click();
+        mainPage.getMoreGamesButton().click();
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.className(GAME_FILTER_CLASS), 4)); // assert page loaded
 
-        // применяем арену
+        // apply arena filter
         driver.findElement(By.xpath(ARENA_FILTER_XPATH)).click();
         driver.findElements(By.className(GAME_FILTER_OPTION_CLASS)).get(5).click();
         wait.until(ExpectedConditions.textToBePresentInElement(driver.findElement(By.xpath(ARENA_FILTER_XPATH)), "Пляж тест"));
@@ -361,16 +346,16 @@ public class SploteamTest {
         int datesCount = driver.findElements(By.className(DATE_CALENDAR_CLASS)).size();
 
         for (int i = 0; i < datesCount; i++) {
-            // каждый раз берём элемент заново — чтобы не словить StaleElementReference
+            // re-fetch the element each time to avoid StaleElementReference
             WebElement dateElement = driver.findElements(By.className(DATE_CALENDAR_CLASS)).get(i);
             String rawText = dateElement.getText().trim();
 
-            // пропускаем "Сегодня" и пустые значения
+            // skip "Today" and empty values
             if (rawText.equalsIgnoreCase("Сегодня") || rawText.isEmpty()) {
                 continue;
             }
 
-            // извлекаем только цифры (например "6" из "6" или " 6 ")
+            // extract digits only (e.g. "6" from "6" or " 6 ")
             String digits = rawText.replaceAll("\\D+", "");
             if (digits.isEmpty()) {
                 continue;
@@ -378,18 +363,18 @@ public class SploteamTest {
 
             int day = Integer.parseInt(digits);
 
-            // кликаем только по ЧЁТНЫМ датам
+            // click only EVEN dates
             if (day % 2 != 0) {
                 continue;
             }
 
-            // клик по дате
+            // click on the date
             dateElement.click();
 
-            // ждём, что подгрузятся элементы игр (если гарантированно должны быть — ждём >0)
-            //wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.className(EVENT_TYPE_ON_GAME_CLASS), 0));
+            // wait for game elements to load (if they are guaranteed — wait for > 0)
+            // wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.className(EVENT_TYPE_ON_GAME_CLASS), 0));
 
-            // теперь проверяем игры на выбранную арену
+            // now validate games for the selected arena
             int gamesCount = driver.findElements(By.className(EVENT_TYPE_ON_GAME_CLASS)).size();
 
             for (int j = 0; j < gamesCount; j++) {
@@ -415,7 +400,7 @@ public class SploteamTest {
 
     @Test
     public void assertCreatedGamesForEachDate() {
-        driver.findElement(By.className(MORE_GAMES_BUTTON_CLASS)).click();
+        mainPage.getMoreGamesButton().click();
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.className(GAME_FILTER_CLASS), 4));
 
         for ( int i = 0; i < driver.findElements(By.className(DATE_CALENDAR_CLASS)).size(); i++ ) {
@@ -440,7 +425,7 @@ public class SploteamTest {
 
     @Test
     public void assertFBaseArenaFilterWithIf() {
-        driver.findElement(By.className(MORE_GAMES_BUTTON_CLASS)).click();
+        mainPage.getMoreGamesButton().click();
         driver.findElement(By.xpath(DATE_WITH_CREATED_GAMES_XPATH)).click();
         wait.until(ExpectedConditions.textToBePresentInElement(driver.findElement(By.xpath(ARENA_FILTER_XPATH)), "Все арены"));// assert page loaded
 
@@ -466,7 +451,7 @@ public class SploteamTest {
 
     @Test
     public void assertSportArtArenaFilterWithIf() {
-        driver.findElement(By.className(MORE_GAMES_BUTTON_CLASS)).click();
+        mainPage.getMoreGamesButton().click();
         driver.findElement(By.xpath(DATE_WITH_CREATED_GAMES_XPATH)).click();
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.className(GAME_FILTER_CLASS), 4));// assert page loaded
 
@@ -534,7 +519,7 @@ public class SploteamTest {
 
     @Test
     public void assertSportArtsPerDay() {
-        driver.findElement(By.className(MORE_GAMES_BUTTON_CLASS)).click();
+        mainPage.getMoreGamesButton().click();
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.className(GAME_FILTER_CLASS), 4));// assert page loaded
 
         int gamePerDayCount = driver.findElements(By.className(DATE_CALENDER_CLASS)).size();
@@ -575,7 +560,6 @@ public class SploteamTest {
             }
         }
 
-    //DIPLOMA
     @Test
     public void assertRegistrationForm() {
         mainPage.getSignInButton().click();
@@ -586,7 +570,6 @@ public class SploteamTest {
         authonticationPage.getAuthPasswordField().isDisplayed();
     }
 
-    //NEGATIVE
     @Test
     public void assertRegistrationFormWrongEmail() {
         mainPage.getSignInButton().click();
@@ -679,79 +662,32 @@ public class SploteamTest {
         profilePage.getEditButton().click();
     }
 
-    private void TopUpBalance(String enterTopUpAmount) throws InterruptedException { // улучшение
-        String balanceTextBefore = ("Личный счет: 204.00 ₽"); //сумма до пополнения
-        String balanceBefore = balanceTextBefore.substring(13, balanceTextBefore.indexOf("₽") - 1);
-        Double depositAmountBefore = Double.valueOf(balanceBefore);
-        System.out.println(depositAmountBefore);
-        driver.findElement(By.className(ADD_MONEY_BUTTON_CLASS)).click();
-        driver.findElement(By.className(INPUT_ADD_MONEY_CLASS)).sendKeys(enterTopUpAmount);
-        driver.findElement(By.cssSelector(TOPUP_BALANCE_BUTTON_CSS)).click();
-        sleep(10000);
-        driver.findElement(By.className(PAY_BUTTON_CLASS)).click();
-    }
-
-
-    //LOCATORS TEST1
-    public static final String SIGNIN_BUTTON_CLASS = "header__signIn";
-
-    public static final String MORE_GAMES_BUTTON_CLASS = "games-list__item_more-games";
-
-    // TEST2 verifyCampSection
-    public static final String FOOTER_LOGO_XPATH = "footer__logo";
-    public static final String RENT_FIELD_XPATH = "//*[@id=\"root\"]/div[2]/section[4]/div/div[2]/a";
-    public static final String SELECT_CITY_CLASS = "location__default";
-    public static final String FOOTBALL_BUTTON_CLASS = "games-list__item_football";
-    public static final String COOPERATION_TITLE_CLASS = "cooperation__title";
+    // verifyCampSection
     public static final String CAMP_YEAR_PATH = "//*[@id=\"root\"]/div[2]/div[1]/div/div[1]/div[1]/div[3] ";
     public static final String CAMP_MONTH_CLASS = "NavLink_navLink__text__zfi3X";
     public static final String CAMP_BUTTON_CLASS = "CampsButton_button__2sQY1";
     public static final String CAMP_CARD_CONTAINER_CLASS = "CampCard_container__1BHZa";
-
     public static final String MONTH_NO_CAMP_TEXT_CLASS = "CampsSearchPage_searchResults__Yio_Q";
-
-    public static final String LOGIN_EMAIL_INPUT_FORM_XPATH = "/html/body/div[3]/div/div/div/div[2]/form/div[1]/input";
-    public static final String LOGIN_PASSWORD_INPUT_FORM_NAME =  "password";
-    public static final String LOGIN_BUTTON_FORM_XPATH = "/html/body/div[3]/div/div/div/div[2]/form/button";
     public static final String USER_NAME_HEADER_CLASS = "profileText__name";
-    public static final String LOGOUT_BUTTON_CLASS = "LKLayout_exit__1QjSv";
-
-    public static final String COMMON_TEXT_ELEMENT_ERROR_CLASS = "form_error__2xL0z"; // улучшение
-
     // User Profile Locators
-    public static final String USER_NAME_PROFILE_CLASS = "ProfileCard_name__2yGm-";
-    public static final String USER_EMAIL_PROFILE_CLASS = "ProfileCard_contacts__eSdIc";
-    public static final String DEPOSIT_BUTTON_PROFILE_CLASS = "header__signIn";
-    public static final String EDIT_BUTTON_PROFILE_CLASS = "OrangeLink_orangeLink__34ZRK";
-    public static final String OWN_DEPOSIT_TEXT_XPATH = "//*[@id=\"root\"]/div[2]/div/div[3]/div[2]/div/div/div[3]/div[1]";
-    public static final String USER_INFO_NAME_XPATH = "//*[@id=\"root\"]/div[2]/div/div[3]/div/div[2]/form/div[1]/input";
-    public static final String SAVE_BUTTON_XPATH = "//*[@id=\"root\"]/div[2]/div/div[3]/div/div[2]/form/button";
-    public static final String DELETE_NAME_BUTTON_XPATH = "//*[@id=\"root\"]/div[2]/div/div[3]/div/div[2]/form/div[1]/span";
-    public static final String SAVE_SUCCESS_TEXT_XPATH = "/html/body/div[3]/div/div/p";
+
     public static final String CLOSE_SAVE_PANEL_CLASS = "modal__close";
     public static final String PROFILE_GENDER_VALUE_CLASS = "Select_controlValue__1mdVP";
     public static final String OPEN_FEMALE_GENDER_XPATH = "//*[@id=\"root\"]/div[2]/div/div[3]/div/div[2]/form/div[2]/div[2]/div[2]";
     public static final String SELECTED_FEMALE_GENDER_XPATH = "//*[@id=\"root\"]/div[2]/div/div[3]/div/div[2]/form/div[2]/div/div[2]";
     public static final String PROFILE_GENDER_TOGGLE_DROPDOWN_CLASS = "Select_toggleIcon__2SB80";
-    public static final String SELECTED_MALE_GENDER_XPATH = "//*[@id=\"root\"]/div[2]/div/div[3]/div/div[2]/form/div[2]/div/div[2]";
     public static final String OPEN_MALE_GENDER_XPATH = "//*[@id=\"root\"]/div[2]/div/div[3]/div/div[2]/form/div[2]/div[2]/div[1]";
     //Add Money Case
     public static final String ADD_MONEY_BUTTON_CLASS = "ProfileCard_depositPayment__1R088";
     public static final String INPUT_ADD_MONEY_CLASS = "FormInput_formInputField__1HTcx";
     public static final String TOPUP_BALANCE_BUTTON_CSS = ".ProfileCard_depositPayment__1R088 form:nth-child(1) > button";
     public static final String WRONG_AMOUNT_FORMAT_ERROR_CLASS = "form_error__2xL0z";
-    public static final String CLOSE_NAVIGATE_TO_PROFILE_BUTTON_CLASS = "modal__close"; // Селектор для всплывающего окна после перехода со страници оплаты обратно на сплотим
-    //PAYMENT GATEWAY LOCATORS
-    public static final String NEW_WEBSITE_LOGO_XPATH = "/html/body/header/div/a/img";
-    public static final String PAY_BUTTON_CLASS = "r-submit";
-
     public static final String DATE_CALENDER_CLASS = "NavLink_navLink__text__zfi3X";
     public static final String DATE_WITH_CREATED_GAMES_XPATH = "//*[@id=\"root\"]/div[2]/div[1]/div/div[1]/div/div[4]/span[2]";
     public static final String ARENA_FILTER_XPATH = "//*[@id=\"root\"]/div[2]/div[1]/div/div[3]/div[1]/div[1]/div/div";
     public static final String EVENT_TYPE_ON_GAME_CLASS = "EventCard_eventTypeRow__type__3TN0s";
     public static final String GAME_FILTER_OPTION_CLASS = "GrayRoundedSelect_dropdownItem__18xe6";
     public static final String ARENA_NAME_ON_GAME_CLASS = "EventCard_eventTypeRow__arena__3ljYS";
-
     public static final String LEVEL_FILTER_XPATH = "//*[@id=\"root\"]/div[2]/div[1]/div/div[3]/div[1]/div[3]/div/div";
     public static final String LEVEL_FILTER_OPTION_CLASS = "GrayRoundedSelect_dropdownItem__18xe6";
     public static final String LEVEL_OPTION_LIGHT_CLASS = "//*[@id=\"root\"]/div[2]/div[1]/div/div[4]/div/div/div[1]/div/div[2]/div[1]/div[1]/div[3]";
@@ -769,13 +705,10 @@ public class SploteamTest {
     public static final String SURVEY_SAVE_BUTTON_CLASS = "Quiz_quiz__button__1gMQ7";
     public static final String SURVEY_SAVE_ERROR_TEXT_CLASS = "Quiz_quiz__errorBlock__I9tK3";
     public static final String BRYANSK_CITY_CLASS = "Select_select__2JwMt";
-
     public static final String DATE_CALENDAR_CLASS = "NavLink_navLink__text__zfi3X";
     public static final String NO_GAMES_MESSAGE_CLASS = "SearchPage_tabPanelContainer__1Lxhs";
-
     public static final String DEPOSIT_CHECKBOX_INPUT_XPATH = "//*[@id=\"root\"]/div[2]/div/div[3]/div[2]/div/div/div[3]/div[2]/label/input";
     public static final String DEPOSIT_CHECKBOX_TEXT_CLASS = "Checkbox_labelText__3VNZc";
-
     public static final String ARENA_CREATED_GAME_PRICE_CLASS = "EventCard_price__6dgeG";
     public static final String ARENA_CREATED_GAME_TIME_CLASS = "EventCard_mainContent__firstRow__1WLC5";
 }
