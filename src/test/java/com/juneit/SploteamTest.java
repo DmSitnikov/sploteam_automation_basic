@@ -188,7 +188,7 @@ public class SploteamTest {
     @Test
     public void assertWrongAmountError() {
         login("sytsytnikov@gmail.com", "Password2");
-        driver.findElement(By.className(USER_NAME_HEADER_CLASS)).click();
+        mainPage.getHeaderLogo().click();
         driver.findElement(By.className(ADD_MONEY_BUTTON_CLASS)).click();
         driver.findElement(By.className(INPUT_ADD_MONEY_CLASS)).sendKeys("b");
         driver.findElement(By.cssSelector(TOPUP_BALANCE_BUTTON_CSS)).click();
@@ -260,7 +260,7 @@ public class SploteamTest {
         driver.navigate().refresh();
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.className(GAME_FILTER_CLASS), 4));
 
-        driver.findElement(By.xpath(SPORT_ART_FILTER_XPATH)).click();
+        eventsCalendarPage.getCityDropDown().click();
         driver.findElements(By.className(SPORT_ART_FILTER_OPTION_CLASS)).get(7).click();
         wait.until(ExpectedConditions.textToBePresentInElement(driver.findElement(By.xpath(SPORT_ART_FILTER_XPATH)), "Пляжный теннис"));
 
@@ -279,7 +279,7 @@ public class SploteamTest {
     @Test
     public void assertSurveySaveButtonError() {
         login("sytsytnikov@gmail.com", "Password2");
-        driver.findElement(By.className(USER_NAME_HEADER_CLASS)).click();
+        mainPage.getHeaderLogo().click();
         driver.findElement(By.xpath(PROFILE_TABS_SURVEY_XPATH)).click();
         driver.findElement(By.className(TABS_SURVEY_CITY_CLASS)).click();
         driver.findElements(By.className(SELECT_SURVEY_CITY_CLASS)).get(6).click();
@@ -456,7 +456,7 @@ public class SploteamTest {
         wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.className(GAME_FILTER_CLASS), 4));// assert page loaded
 
         // how to get number of options in drop down?
-        driver.findElement(By.xpath(SPORT_ART_FILTER_XPATH)).click();
+        eventsCalendarPage.getSportArtFilterDropDown().click();
         int sportArtOptionSize = driver.findElements(By.className(SPORT_ART_FILTER_OPTION_CLASS)).size();
 
         for (int i = 0; i < sportArtOptionSize; i++){
@@ -478,7 +478,7 @@ public class SploteamTest {
     @Test
     public void checkDepositCheckBox() {
         login("sytsytnikov@gmail.com", "Password2");
-        driver.findElement(By.className(USER_NAME_HEADER_CLASS)).click();
+        mainPage.getHeaderLogo().click();
         wait.until(ExpectedConditions.textToBePresentInElement(driver.findElement(By.className(DEPOSIT_CHECKBOX_TEXT_CLASS)), "Возвращать денежные средства на личный счет"));
 
         Assert.assertFalse(driver.findElement(By.xpath(DEPOSIT_CHECKBOX_INPUT_XPATH)).isSelected());
@@ -525,7 +525,7 @@ public class SploteamTest {
         int gamePerDayCount = driver.findElements(By.className(DATE_CALENDER_CLASS)).size();
 
         // how to get number of options in drop down?
-        driver.findElement(By.xpath(SPORT_ART_FILTER_XPATH)).click();
+        eventsCalendarPage.getSportArtFilterDropDown().click();
         int sportArtFilter = driver.findElements(By.className(SPORT_ART_FILTER_OPTION_CLASS)).size();
 
         for (int i = 1; i < gamePerDayCount; i++) {
@@ -546,7 +546,7 @@ public class SploteamTest {
             }
 
             for (int j = 1; j < sportArtFilter; j++){
-                driver.findElement(By.xpath(SPORT_ART_FILTER_XPATH)).click();
+                eventsCalendarPage.getSportArtFilterDropDown().click();
                 WebElement gameElement = driver.findElements(By.className(SPORT_ART_FILTER_OPTION_CLASS)).get(j);
 
                 gameElement.click();
@@ -642,8 +642,8 @@ public class SploteamTest {
 
 
     private void resetSportFilter() {
-        driver.findElement(By.xpath(SPORT_ART_FILTER_XPATH)).click();
-        driver.findElements(By.className(SPORT_ART_FILTER_OPTION_CLASS)).get(0).click();
+        eventsCalendarPage.getSportArtFilterDropDown().click();
+        eventsCalendarPage.getSportArtFilterOption().get(0).click();
     }
 
     private void login(String email, String password) {
@@ -668,10 +668,7 @@ public class SploteamTest {
     public static final String CAMP_BUTTON_CLASS = "CampsButton_button__2sQY1";
     public static final String CAMP_CARD_CONTAINER_CLASS = "CampCard_container__1BHZa";
     public static final String MONTH_NO_CAMP_TEXT_CLASS = "CampsSearchPage_searchResults__Yio_Q";
-    public static final String USER_NAME_HEADER_CLASS = "profileText__name";
     // User Profile Locators
-
-    public static final String CLOSE_SAVE_PANEL_CLASS = "modal__close";
     public static final String PROFILE_GENDER_VALUE_CLASS = "Select_controlValue__1mdVP";
     public static final String OPEN_FEMALE_GENDER_XPATH = "//*[@id=\"root\"]/div[2]/div/div[3]/div/div[2]/form/div[2]/div[2]/div[2]";
     public static final String SELECTED_FEMALE_GENDER_XPATH = "//*[@id=\"root\"]/div[2]/div/div[3]/div/div[2]/form/div[2]/div/div[2]";
