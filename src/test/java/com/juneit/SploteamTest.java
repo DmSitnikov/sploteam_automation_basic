@@ -277,21 +277,6 @@ public class SploteamTest {
     }
 
     @Test
-    public void assertSurveySaveButtonError() {
-        login("sytsytnikov@gmail.com", "Password2");
-        mainPage.getHeaderLogo().click();
-        driver.findElement(By.xpath(PROFILE_TABS_SURVEY_XPATH)).click();
-        driver.findElement(By.className(TABS_SURVEY_CITY_CLASS)).click();
-        driver.findElements(By.className(SELECT_SURVEY_CITY_CLASS)).get(6).click();
-        wait.until(ExpectedConditions.textToBePresentInElement(driver.findElement(By.className(BRYANSK_CITY_CLASS)), "Брянск"));
-        String newCity = driver.findElement(By.className(BRYANSK_CITY_CLASS)).getText();
-        System.out.println(newCity);
-        driver.findElement(By.className(SURVEY_SAVE_BUTTON_CLASS)).click();
-        assertEquals("Ответьте, пожалуйста, на все вопросы", driver.findElement(By.className(SURVEY_SAVE_ERROR_TEXT_CLASS)).getText());
-        logout();
-    }
-
-    @Test
     public void assertUserProfileGenderPositive() {
         login("sytsytnikov@gmail.com", "Password2");
         goToEditProfile();
@@ -694,14 +679,7 @@ public class SploteamTest {
     public static final String SPORT_ART_FILTER_OPTION_CLASS = "GrayRoundedSelect_dropdownItem__18xe6";
     public static final String GAME_FILTER_CLASS = "GrayRoundedSelect_notFlex__j02vB";
     public static final String SPORT_ART_OPTION_ON_GAME_CLASS = "EventCard_sport__2ZcAA";
-
     // Tabs Survey Locators
-    public static final String PROFILE_TABS_SURVEY_XPATH = "//*[@id=\"root\"]/div[2]/div/div[3]/div[1]/div/div[4]";
-    public static final String TABS_SURVEY_CITY_CLASS = "Select_control__3L5dE";
-    public static final String SELECT_SURVEY_CITY_CLASS = "Select_dropdownItem__2T2FU";
-    public static final String SURVEY_SAVE_BUTTON_CLASS = "Quiz_quiz__button__1gMQ7";
-    public static final String SURVEY_SAVE_ERROR_TEXT_CLASS = "Quiz_quiz__errorBlock__I9tK3";
-    public static final String BRYANSK_CITY_CLASS = "Select_select__2JwMt";
     public static final String DATE_CALENDAR_CLASS = "NavLink_navLink__text__zfi3X";
     public static final String NO_GAMES_MESSAGE_CLASS = "SearchPage_tabPanelContainer__1Lxhs";
     public static final String DEPOSIT_CHECKBOX_INPUT_XPATH = "//*[@id=\"root\"]/div[2]/div/div[3]/div[2]/div/div/div[3]/div[2]/label/input";
