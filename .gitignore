@@ -1,7 +1,17 @@
-**/.DS_Store
-.DS_Store
+# Local configuration and credentials
 **/config.properties
-**/.idea
+.env
+.env.*
+!.env.example
+
+# IDE and operating system files
+.idea/
+*.iml
+.vscode/
+**/.DS_Store
+Thumbs.db
+
+# Build output
 **/target/
 *.class
-.idea/workspace.xml
+*.log

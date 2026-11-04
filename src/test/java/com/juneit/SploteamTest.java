@@ -43,7 +43,7 @@ public class SploteamTest {
 
     @After public void
     close () {
-        driver.close ();
+        driver.quit ();
     }
 
     @Test
@@ -93,7 +93,7 @@ public class SploteamTest {
 
     @Test
     public void assertLoginPositive() {
-        login("sytsytnikov@gmail.com", "Password2");
+        login(properties.testEmail, properties.testPassword);
         mainPage.getLoggedInUserHeader().click();
         profilePage.getLogoutButton().click();
         mainPage.getSignInButton().isDisplayed();
@@ -101,21 +101,21 @@ public class SploteamTest {
 
     @Test
     public void assertLoginPasswordShortError() {
-        login("sytsytnikov@gmail.com", "Pas");
+        login(properties.testEmail, "Pas");
         errorTextPage.getErrorText().isDisplayed();
         assertEquals("Неверное значение", errorTextPage.getErrorText().getText());
     }
 
     @Test
     public void assertLoginEmailSpellingError() {
-        login("sysytnikov@gmail.com", "Password1");
+        login("unknown.user@example.com", "Password1");
         errorTextPage.getErrorText().isDisplayed();
         assertEquals("Такой логин или пароль не найдены", errorTextPage.getErrorText().getText());
     }
 
     @Test
     public void assertLoginEmailEmptyFieldError() {
-        login("", "Password2");
+        login("", properties.testPassword);
         loginPage.getLoginEmailInput().isDisplayed();
         assertEquals("", loginPage.getLoginEmailInput().getText());
         loginPage.getLoginButton().click();
@@ -124,21 +124,21 @@ public class SploteamTest {
 
     @Test
     public void assertLoginEmailNoDotError() {
-        login("sytsytnikov@gmailcom", "Password2");
+        login("invalid@examplecom", properties.testPassword);
         errorTextPage.getErrorText().isDisplayed();
         assertEquals("Неверное значение", errorTextPage.getErrorText().getText());
     }
 
     @Test
     public void assertLoginLongPasswordError() {
-        login("sytsytnikov@gmail.com", "Password1211");
+        login(properties.testEmail, "Password1211");
         errorTextPage.getErrorText().isDisplayed();
         assertEquals("Неверный пароль", errorTextPage.getErrorText().getText());
     }
 
     @Test
     public void assertProfilePagePositive() {
-        login("sytsytnikov@gmail.com", "Password2");
+        login(properties.testEmail, properties.testPassword);
         mainPage.getLoggedInUserHeader().click();
         profilePage.getProfileUserName().isDisplayed();
         profilePage.getProfileUserEmail().isDisplayed();
@@ -151,10 +151,10 @@ public class SploteamTest {
 
     @Test
     public void assertEditUserInfo() {
-        login("sytsytnikov@gmail.com", "Password2");
+        login(properties.testEmail, properties.testPassword);
         goToEditProfile();
         String nameBefore = editPage.getEditNameInput().getAttribute("value");
-        Assert.assertTrue(nameBefore.contains("Dmitriy Sitnikov"));
+        Assert.assertTrue(nameBefore.contains(properties.testDisplayName));
         editPage.getDeleteNameButton().click(); //Удаляю имя которое было введено ранее
         editPage.getEditNameInput().sendKeys("Vanja Ivanov");
         assertEquals("Сохранить изменения", editPage.getEditSaveButton().getText());
@@ -166,18 +166,18 @@ public class SploteamTest {
         assertEquals("Vanja Ivanov", mainPage.getLoggedInUserHeader().getText());
         goToEditProfile();
         editPage.getDeleteNameButton().click();
-        editPage.getEditNameInput().sendKeys("Dmitriy Sitnikov");
+        editPage.getEditNameInput().sendKeys(properties.testDisplayName);
         editPage.getEditSaveButton().click();
         editPage.getCloseSavePanelButton().click();
         mainPage.getLoggedInUserHeader().click();
         driver.navigate().refresh();
-        assertEquals("Dmitriy Sitnikov", mainPage.getLoggedInUserHeader().getText());
+        assertEquals(properties.testDisplayName, mainPage.getLoggedInUserHeader().getText());
         logout();
     }
 
     @Test
     public void assertEmptyNameField() {
-        login("sytsytnikov@gmail.com", "Password2");
+        login(properties.testEmail, properties.testPassword);
         goToEditProfile();
         editPage.getDeleteNameButton().click(); //Удаляю имя которое было введено ранее
         editPage.getEditSaveButton().click();
@@ -187,7 +187,7 @@ public class SploteamTest {
 
     @Test
     public void assertWrongAmountError() {
-        login("sytsytnikov@gmail.com", "Password2");
+        login(properties.testEmail, properties.testPassword);
         mainPage.getHeaderLogo().click();
         driver.findElement(By.className(ADD_MONEY_BUTTON_CLASS)).click();
         driver.findElement(By.className(INPUT_ADD_MONEY_CLASS)).sendKeys("b");
@@ -199,9 +199,9 @@ public class SploteamTest {
 
     @Test
     public void assertNoAtEmail() {
-        login("sytsytnikovgmail.com", "Password2");
+        login("invalid.example.com", properties.testPassword);
         String emailNoAtError = loginPage.getLoginEmailInput().getAttribute("validationMessage");
-        assertEquals("Die E-Mail-Adresse muss ein @-Zeichen enthalten. In der Angabe \"sytsytnikovgmail.com\" fehlt ein @-Zeichen.", emailNoAtError);
+        assertEquals("Die E-Mail-Adresse muss ein @-Zeichen enthalten. In der Angabe \"invalid.example.com\" fehlt ein @-Zeichen.", emailNoAtError);
     }
 
     @Test
@@ -278,7 +278,7 @@ public class SploteamTest {
 
     @Test
     public void assertUserProfileGenderPositive() {
-        login("sytsytnikov@gmail.com", "Password2");
+        login(properties.testEmail, properties.testPassword);
         goToEditProfile();
         String genderBefore = driver.findElement(By.className(PROFILE_GENDER_VALUE_CLASS)).getText();
         Assert.assertTrue(genderBefore.contains("Мужской"));
@@ -298,7 +298,7 @@ public class SploteamTest {
 
     @Test
     public void assertUserProfileSwitchGender() {
-        login("sytsytnikov@gmail.com", "Password2");
+        login(properties.testEmail, properties.testPassword);
         goToEditProfile();
         String selectedGender = driver.findElement(By.className(PROFILE_GENDER_VALUE_CLASS)).getText();
         driver.findElement(By.className(PROFILE_GENDER_TOGGLE_DROPDOWN_CLASS)).click();
@@ -372,7 +372,7 @@ public class SploteamTest {
             String Time = null;
             String Price = null;
 
-            for (int k = 0; i < driver.findElements(By.className(EVENT_TYPE_ON_GAME_CLASS)).size(); i++) {
+            for (int k = 0; k < driver.findElements(By.className(EVENT_TYPE_ON_GAME_CLASS)).size(); k++) {
 
 
                 Time = driver.findElements(By.className(ARENA_CREATED_GAME_TIME_CLASS)).get(k).getText();
@@ -462,7 +462,7 @@ public class SploteamTest {
 
     @Test
     public void checkDepositCheckBox() {
-        login("sytsytnikov@gmail.com", "Password2");
+        login(properties.testEmail, properties.testPassword);
         mainPage.getHeaderLogo().click();
         wait.until(ExpectedConditions.textToBePresentInElement(driver.findElement(By.className(DEPOSIT_CHECKBOX_TEXT_CLASS)), "Возвращать денежные средства на личный счет"));
 
@@ -560,7 +560,7 @@ public class SploteamTest {
         mainPage.getSignInButton().click();
         authonticationPage.getAuthTab().click();
         authonticationPage.getAuthNameField().sendKeys("Dima Popov");
-        authonticationPage.getAuthEmailField().sendKeys("sytsytnikov@gmail.com");
+        authonticationPage.getAuthEmailField().sendKeys(properties.testEmail);
         authonticationPage.getAuthPasswordField().sendKeys("Password1");
         authonticationPage.getAuthCreateAccButton().click();
         assertEquals("Аккаунт уже зарегистрирован", authonticationPage.getAuthWrongEmailText().getText());
@@ -571,7 +571,7 @@ public class SploteamTest {
     public void assertChangePasswordOption() {
         mainPage.getSignInButton().click();
         loginPage.getSignInRestore().click();
-        loginPage.getSignInEmailInput().sendKeys("sytsytnikov@gmail.com");
+        loginPage.getSignInEmailInput().sendKeys(properties.testEmail);
         loginPage.getSignInSendEmailButton().click();
         assertEquals("На указанный вами адрес выслано письмо с ссылкой. Откройте почту и пойдите по ссылке для сброса пароля. Если письмо не пришло, проверьте папку «Спам» или попробуйте еще раз.",
                 loginPage.getSignInSubmitText().getText());
